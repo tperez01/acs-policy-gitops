@@ -1,0 +1,28 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: import-acs-policy
+  namespace: stackrox
+spec:
+  template:
+    metadata:
+    spec:
+      containers:
+      - command:
+        - /bin/bash
+        - -c
+        - |
+          #!/usr/bin/env bash
+          curl -sk -X POST -u "admin:$PASSWORD" -H "Content-Type: application/json" --data @policy.json "https://central-stackrox.apps.cluster-gmhvf.gmhvf.sandbox410.opentlc.com/v1/policies"
+        env:
+        - name: PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: password
+              name: central-htpasswd
+        image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
+        imagePullPolicy: Always
+        name: import-acs-policy
+      dnsPolicy: ClusterFirst
+      restartPolicy: Never
+      terminationGracePeriodSeconds: 30
