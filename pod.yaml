@@ -1,20 +1,18 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: dapi-test-pod
+  name: policy-test-pod
+  namespace: stackrox
 spec:
   containers:
     - name: test-container
-      image: registry.k8s.io/busybox
-      command: [ "/bin/sh","-c","cat /etc/config/keys" ]
+      image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
+      command: [ "/bin/bash","-c","cat /var/policies/policy.json" ]
       volumeMounts:
       - name: config-volume
-        mountPath: /etc/config
+        mountPath: /var/policies/
   volumes:
     - name: config-volume
       configMap:
-        name: special-config
-        items:
-        - key: SPECIAL_LEVEL
-          path: keys
+        name: policy-gitops
   restartPolicy: Never

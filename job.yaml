@@ -13,16 +13,23 @@ spec:
         - -c
         - |
           #!/usr/bin/env bash
-          curl -sk -X POST -u "admin:$PASSWORD" -H "Content-Type: application/json" --data @policy.json "https://central-stackrox.apps.cluster-gmhvf.gmhvf.sandbox410.opentlc.com/v1/policies"
+          curl -sk -X POST -u "admin:$PASSWORD" -H "Content-Type: application/json" --data @/etc/policies/policy.json "https://central-stackrox.apps.cluster-dmlmr.dmlmr.sandbox1513.opentlc.com/v1/policies"
+        volumeMounts:
+          - name: config-volume
+            mountPath: /etc/policies/
         env:
         - name: PASSWORD
           valueFrom:
             secretKeyRef:
               key: password
-              name: central-htpasswd
+              name: acs-password
         image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
         imagePullPolicy: Always
         name: import-acs-policy
+      volumes:
+        - name: config-volume
+          configMap:
+            name: policy-gitops
+      restartPolicy: Never 
       dnsPolicy: ClusterFirst
-      restartPolicy: Never
       terminationGracePeriodSeconds: 30

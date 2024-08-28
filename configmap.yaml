@@ -1,4 +1,8 @@
 apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: policy-gitops
+  namespace: stackrox
 data:
   policy.json: |
     {
@@ -46,7 +50,3 @@ data:
         "isDefault": false
     }
 
-kind: ConfigMap
-metadata:
-  name: policy-gitops
-  namespace: stackrox
