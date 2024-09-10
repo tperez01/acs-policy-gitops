@@ -1,0 +1,37 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: import-acs-policy
+  namespace: stackrox
+spec:
+  schedule: "0 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - command:
+            - /bin/bash
+            - -c
+            - |
+              #!/usr/bin/env bash
+              curl -sk -X POST -u "admin:$PASSWORD" -H "Content-Type: application/json" --data @/etc/policies/policies.json "https://central/v1/policies/import"
+            volumeMounts:
+              - name: config-volume
+                mountPath: /etc/policies/
+            env:
+            - name: PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: acs-password     
+            image: image-registry.openshift-image-registry.svc:5000/openshift/cli:latest
+            imagePullPolicy: Always
+            name: import-acs-policy
+          volumes:
+            - name: config-volume
+              configMap:
+                name: policy-gitops
+          restartPolicy: Never 
+          dnsPolicy: ClusterFirst
+          terminationGracePeriodSeconds: 30

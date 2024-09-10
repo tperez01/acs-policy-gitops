@@ -4,6 +4,7 @@ metadata:
   name: import-acs-policy
   namespace: stackrox
 spec:
+  ttlSecondsAfterFinished: 45
   template:
     metadata:
     spec:
