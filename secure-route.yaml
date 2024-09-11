@@ -1,0 +1,28 @@
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: secure-central
+  namespace: stackrox
+spec:
+  to:
+    kind: Service
+    name: central
+  tls:
+    termination: reencrypt
+    insecureEdgeTerminationPolicy: ''
+    destinationCACertificate: |-
+      -----BEGIN CERTIFICATE-----
+      MIIB0zCCAXigAwIBAgIUGcXmKDvcNin6q/dmknq6GW3HmM4wCgYIKoZIzj0EAwIw
+      RzEnMCUGA1UEAxMeU3RhY2tSb3ggQ2VydGlmaWNhdGUgQXV0aG9yaXR5MRwwGgYD
+      VQQFExM1MjY3OTY2MTUzMDgwODU5MDUxMB4XDTI0MDkxMTA5NTAwMFoXDTI5MDkx
+      MDA5NTAwMFowRzEnMCUGA1UEAxMeU3RhY2tSb3ggQ2VydGlmaWNhdGUgQXV0aG9y
+      aXR5MRwwGgYDVQQFExM1MjY3OTY2MTUzMDgwODU5MDUxMFkwEwYHKoZIzj0CAQYI
+      KoZIzj0DAQcDQgAEcoZl7qlcWUMalbjOPRaGUtQS/mXeZwMYumhLHFH3bGuw5NdE
+      8UlbhgvbFm/O34xqTYnxrSjkB97QcSOaME1HQKNCMEAwDgYDVR0PAQH/BAQDAgEG
+      MA8GA1UdEwEB/wQFMAMBAf8wHQYDVR0OBBYEFAmIOaOpPw2HhcvzdQFP71YB6eiy
+      MAoGCCqGSM49BAMCA0kAMEYCIQDmGoEl4K3B+5CPkuPnxyD5Wl5k2fLTP9kIpnm0
+      chgp1QIhAJbetfHfxdlDZyFUL9HAJis2ngWcwrE/pS/a9Z/LY/S2
+      -----END CERTIFICATE-----
+  port:
+    targetPort: https
+  alternateBackends: []
